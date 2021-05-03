@@ -1,5 +1,5 @@
 // Belly Button Biodiversity - Plotly.js
-//samples.json> got data for names, metadata, samples
+//samples.json> get data for metadata, names, % samples
 // BONUS: Build the Gauge Chart
 
 function buildMetadata(sample) {
