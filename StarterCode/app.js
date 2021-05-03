@@ -78,7 +78,7 @@ function init() {
                 .property("value", sample);
         });
 
-        // Use the first sample from the list to build the initial plots
+        // Use to build the initial plots
         const firstSample = sampleNames[0];
         buildCharts(firstSample);
         buildMetadata(firstSample);

@@ -28,11 +28,8 @@ function buildGaugeChart(sample) {
     d3.json("samples.json").then(data => {
 
         var objs = data.metadata;
-        //console.log("objs", objs);
-
         var matchedSampleObj = objs.filter(sampleData =>
             sampleData["id"] === parseInt(sample));
-        //console.log("buildGaugeChart matchedSampleObj", matchedSampleObj);
 
         gaugeChart(matchedSampleObj[0]);
     });
@@ -44,12 +41,11 @@ function gaugeChart(data) {
 
     if (data.wfreq === null) {
         data.wfreq = 0;
-
     }
 
     let degree = parseInt(data.wfreq) * (180 / 10);
 
-    // Trig to calc meter point
+    // calc meter point
     let degrees = 180 - degree;
     let radius = .5;
     let radians = degrees * Math.PI / 180;
@@ -122,18 +118,15 @@ function gaugeChart(data) {
 }
 
 function buildCharts(sample) {
-
     // Use `d3.json` to fetch the sample data for the plots
     d3.json("samples.json").then((data) => {
         var samples = data.samples;
         var resultsarray = samples.filter(sampleobject =>
             sampleobject.id == sample);
         var result = resultsarray[0]
-
         var ids = result.otu_ids;
         var labels = result.otu_labels;
         var values = result.sample_values;
-
         var LayoutBubble = {
             margin: { t: 0 },
             xaxis: { title: "OTU ID" },
@@ -159,7 +152,6 @@ function buildCharts(sample) {
             text: labels.slice(0, 10).reverse(),
             type: "bar",
             orientation: "h"
-
         }];
 
         var barLayout = {
@@ -173,8 +165,7 @@ function buildCharts(sample) {
 function init() {
 // Grab a reference to the dropdown select element
 var selector = d3.select("#selDataset");
-
-// Use the list of sample names to populate the select options
+// Use to populate the select options
 d3.json("samples.json").then((data) => {
   var sampleNames = data.names;
   sampleNames.forEach((sample) => {
@@ -184,13 +175,11 @@ d3.json("samples.json").then((data) => {
       .property("value", sample);
   });
 
-  // Use the first sample from the list to build the initial plots
+  // Use to build the initial plots
   const firstSample = sampleNames[0];
   buildMetadata(firstSample);
   buildCharts(firstSample);
   buildGaugeChart(firstSample)
-
-
 });
 }
 
@@ -199,10 +188,7 @@ function optionChanged(newSample) {
 buildMetadata(newSample);
 buildCharts(newSample);
 buildGaugeChart(newSample)
-
 }
-
-
 
 // Initialize the dashboard
 init();
