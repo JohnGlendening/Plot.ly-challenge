@@ -70,10 +70,23 @@ function init() {
 
     // Use the list of sample names to populate the select options
     d3.json("samples.json").then((data) => {
-                var sampleNames = data.names;
-                sampleNames.forEach((sample) => {
-                    selector
-                        .append("option")
-                        .text(sample)
-                        .property("value", sample);
-                });
+        var sampleNames = data.names;
+        sampleNames.forEach((sample) => {
+            selector
+                .append("option")
+                .text(sample)
+                .property("value", sample);
+        });
+
+        // Use the first sample from the list to build the initial plots
+        const firstSample = sampleNames[0];
+        buildCharts(firstSample);
+        buildMetadata(firstSample);
+    });
+}
+
+function optionChanged(newSample) {
+    // Fetch new data each time a new sample is selected
+    buildCharts(newSample);
+    buildMetadata(newSample);
+}
