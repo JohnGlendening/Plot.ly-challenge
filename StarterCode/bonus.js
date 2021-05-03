@@ -40,83 +40,133 @@ function buildGaugeChart(sample) {
 
 // gauge chart
 function gaugeChart(data) {
-  console.log("gaugeChart", data);
+    console.log("gaugeChart", data);
 
-  if(data.wfreq === null){
-    data.wfreq = 0;
+    if (data.wfreq === null) {
+        data.wfreq = 0;
 
-  }
+    }
 
-  let degree = parseInt(data.wfreq) * (180/10);
+    let degree = parseInt(data.wfreq) * (180 / 10);
 
-  // Trig to calc meter point
-  let degrees = 180 - degree;
-  let radius = .5;
-  let radians = degrees * Math.PI / 180;
-  let x = radius * Math.cos(radians);
-  let y = radius * Math.sin(radians);
+    // Trig to calc meter point
+    let degrees = 180 - degree;
+    let radius = .5;
+    let radians = degrees * Math.PI / 180;
+    let x = radius * Math.cos(radians);
+    let y = radius * Math.sin(radians);
 
-  let mainPath = 'M -.0 -0.025 L .0 0.025 L ',
-      pathX = String(x),
-      space = ' ',
-      pathY = String(y),
-      pathEnd = ' Z';
-  let path = mainPath.concat(pathX, space, pathY, pathEnd);
-  
-  let trace = [{ type: 'scatter',
-     x: [0], y:[0],
-      marker: {size: 50, color:'2F6497'},
-      showlegend: false,
-      name: 'WASH FREQ',
-      text: data.wfreq,
-      hoverinfo: 'text+name'},
-    { values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 9],
-    rotation: 90,
-    text: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '1-2', '0-1',''],
-    textinfo: 'text',
-    textposition:'inside',
-    textfont:{
-      size : 16,
-      },
-    marker: {colors:[...arrColorsG]},
-    labels: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '2-1', '0-1',''],
-    hoverinfo: 'text',
-    hole: .5,
-    type: 'pie',
-    showlegend: false
-  }];
+    let mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+        pathX = String(x),
+        space = ' ',
+        pathY = String(y),
+        pathEnd = ' Z';
+    let path = mainPath.concat(pathX, space, pathY, pathEnd);
 
-  let layout = {
-    shapes:[{
-        type: 'path',
-        path: path,
-        fillcolor: '#2F6497',
-        line: {
-          color: '#2F6497'
+    let trace = [{
+            type: 'scatter',
+            x: [0],
+            y: [0],
+            marker: { size: 50, color: '2F6497' },
+            showlegend: false,
+            name: 'WASH FREQ',
+            text: data.wfreq,
+            hoverinfo: 'text+name'
+        },
+        {
+            values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 9],
+            rotation: 90,
+            text: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '1-2', '0-1', ''],
+            textinfo: 'text',
+            textposition: 'inside',
+            textfont: {
+                size: 16,
+            },
+            marker: { colors: [...arrColorsG] },
+            labels: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '2-1', '0-1', ''],
+            hoverinfo: 'text',
+            hole: .5,
+            type: 'pie',
+            showlegend: false
         }
-      }],
+    ];
 
-    title: '<b>Belly Button Washing Frequency</b> <br> <b>Scrub Per Week</b>',
-    height: 550,
-    width: 550,
-    xaxis: {zeroline:false, showticklabels:false,
-               showgrid: false, range: [-1, 1]},
-    yaxis: {zeroline:false, showticklabels:false,
-               showgrid: false, range: [-1, 1]},
-  };
+    let layout = {
+        shapes: [{
+            type: 'path',
+            path: path,
+            fillcolor: '#2F6497',
+            line: {
+                color: '#2F6497'
+            }
+        }],
 
-  Plotly.newPlot('gauge', trace, layout, {responsive: true});
+        title: '<b>Belly Button Washing Frequency</b> <br> <b>Scrub Per Week</b>',
+        height: 550,
+        width: 550,
+        xaxis: {
+            zeroline: false,
+            showticklabels: false,
+            showgrid: false,
+            range: [-1, 1]
+        },
+        yaxis: {
+            zeroline: false,
+            showticklabels: false,
+            showgrid: false,
+            range: [-1, 1]
+        },
+    };
+
+    Plotly.newPlot('gauge', trace, layout, { responsive: true });
 }
 
 function buildCharts(sample) {
 
-// Use `d3.json` to fetch the sample data for the plots
-d3.json("samples.json").then((data) => {
-  var samples= data.samples;
-  var resultsarray= samples.filter(sampleobject => 
-      sampleobject.id == sample);
-  var result= resultsarray[0]
+    // Use `d3.json` to fetch the sample data for the plots
+    d3.json("samples.json").then((data) => {
+        var samples = data.samples;
+        var resultsarray = samples.filter(sampleobject =>
+            sampleobject.id == sample);
+        var result = resultsarray[0]
 
-  var ids = result.otu_ids;
-  var labels = result.otu_labels;
-  var values = result.sample_values;
+        var ids = result.otu_ids;
+        var labels = result.otu_labels;
+        var values = result.sample_values;
+
+        var LayoutBubble = {
+            margin: { t: 0 },
+            xaxis: { title: "OTU ID" },
+            hovermode: "closest",
+        };
+
+        var DataBubble = [{
+            x: ids,
+            y: values,
+            text: labels,
+            mode: "markers",
+            marker: {
+                color: ids,
+                size: values,
+            }
+        }];
+
+        Plotly.newPlot("bubble", DataBubble, LayoutBubble);
+
+        var bar_data = [{
+            y: ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse(),
+            x: values.slice(0, 10).reverse(),
+            text: labels.slice(0, 10).reverse(),
+            type: "bar",
+            orientation: "h"
+
+        }];
+
+        var barLayout = {
+            title: "Top 10 Bacteria Cultures Found",
+            margin: { t: 30, l: 150 }
+        };
+
+        Plotly.newPlot("bar", bar_data, barLayout);
+    });
+}
