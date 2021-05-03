@@ -21,3 +21,19 @@ function buildMetadata(sample) {
         });
     });
 }
+
+function buildGaugeChart(sample) {
+    console.log("sample", sample);
+
+    d3.json("samples.json").then(data => {
+
+        var objs = data.metadata;
+        //console.log("objs", objs);
+
+        var matchedSampleObj = objs.filter(sampleData =>
+            sampleData["id"] === parseInt(sample));
+        //console.log("buildGaugeChart matchedSampleObj", matchedSampleObj);
+
+        gaugeChart(matchedSampleObj[0]);
+    });
+}
