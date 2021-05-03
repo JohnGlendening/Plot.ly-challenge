@@ -46,3 +46,12 @@ function buildCharts(sample) {
                 }];
 
                 Plotly.newPlot("bubble", DataBubble, LayoutBubble);
+
+                var bar_data = [{
+                    y: ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse(),
+                    x: values.slice(0, 10).reverse(),
+                    text: labels.slice(0, 10).reverse(),
+                    type: "bar",
+                    orientation: "h"
+
+                }];
